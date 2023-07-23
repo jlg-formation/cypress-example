@@ -6,9 +6,10 @@ describe("add and remove stock articles", () => {
   });
 
   it("should call the list of articles", () => {
-    cy.contains(".button", "Voir le stock").click();
     cy.intercept({ method: "GET", url: "/api/articles" }, articles).as(
       "getArticles"
     );
+    cy.contains(".button", "Voir le stock").click();
+    cy.wait("@getArticles");
   });
 });
