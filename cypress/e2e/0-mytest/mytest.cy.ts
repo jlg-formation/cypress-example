@@ -34,9 +34,9 @@ describe("add and remove stock articles", () => {
     );
 
     cy.get("input").should("have.length", 3);
-    cy.get("input").eq(0).clear().type("Tournevis Cruciforme");
+    cy.get("input").first().clear().type("Tournevis Cruciforme");
     cy.get("input").eq(1).clear().type("12.34");
-    cy.get("input").eq(2).clear().type("456");
+    cy.get("input").last().clear().type("456");
 
     cy.contains("button", "Ajouter").should("be.disabled");
   });
