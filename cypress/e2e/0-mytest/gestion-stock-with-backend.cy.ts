@@ -1,24 +1,26 @@
 import { articles } from "../../fixtures/articles";
 
 describe("add and remove stock articles", () => {
-  beforeEach(() => {
+  it("should call the list of articles", () => {
+    cy.clock();
     cy.visit("http://localhost:4200/");
-  });
-
-  it.only("should call the list of articles", () => {
     cy.intercept({ method: "GET", url: "/api/articles" }, articles).as(
       "getArticles"
     );
     cy.contains(".button", "Voir le stock").click();
+    cy.tick(3000);
     cy.wait("@getArticles");
-    cy.get("tbody tr:not(:hidden)").should("have.length", 2);
+    cy.get("tbody tr:not(:hidden)").should("have.length", articles.length);
   });
 
   it("should delete the pelle", () => {
+    cy.clock();
+    cy.visit("http://localhost:4200/");
     cy.intercept({ method: "GET", url: "/api/articles" }, articles).as(
       "getArticles"
     );
     cy.contains(".button", "Voir le stock").click();
+    cy.tick(3000);
     cy.wait("@getArticles");
 
     cy.contains("table tbody tr", "Pelle").click();
@@ -31,22 +33,27 @@ describe("add and remove stock articles", () => {
       articles.filter((a) => a.name !== "Pelle")
     ).as("getArticles");
     cy.get("button[title='Supprimer']").click();
+    cy.tick(3000);
     cy.wait("@deleteArticles");
+    cy.tick(3000);
     cy.wait("@getArticles");
   });
 
   it("should add a new article", () => {
+    cy.clock();
+    cy.visit("http://localhost:4200/");
     cy.intercept({ method: "GET", url: "/api/articles" }, articles).as(
       "getArticles"
     );
     cy.contains(".button", "Voir le stock").click();
+    cy.tick(3000);
     cy.wait("@getArticles");
 
     cy.get(".button[title='Ajouter']").click();
 
     cy.get("input").first().clear().type("Truc");
-    cy.tab().clear().type("12.34");
-    cy.tab().clear().type("456");
+    cy.get("input").eq(1).clear().type("12.34");
+    cy.get("input").eq(2).clear().type("456");
 
     cy.intercept({ method: "POST", url: "/api/articles" }).as("addNewArticle");
     cy.intercept({ method: "GET", url: "/api/articles" }, [
@@ -54,7 +61,9 @@ describe("add and remove stock articles", () => {
       { id: "a3", name: "Truc", price: 12.34, qty: 456 },
     ]).as("getArticles");
     cy.contains("button", "Ajouter").click();
+    cy.tick(3000);
     cy.wait("@addNewArticle");
+    cy.tick(3000);
     cy.wait("@getArticles");
   });
 });
