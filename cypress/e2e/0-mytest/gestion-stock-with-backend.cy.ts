@@ -5,12 +5,13 @@ describe("add and remove stock articles", () => {
     cy.visit("http://localhost:4200/");
   });
 
-  it("should call the list of articles", () => {
+  it.only("should call the list of articles", () => {
     cy.intercept({ method: "GET", url: "/api/articles" }, articles).as(
       "getArticles"
     );
     cy.contains(".button", "Voir le stock").click();
     cy.wait("@getArticles");
+    cy.get("tbody tr:not(:hidden)").should("have.length", 2);
   });
 
   it("should delete the pelle", () => {
