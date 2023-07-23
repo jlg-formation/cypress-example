@@ -34,7 +34,7 @@ describe("add and remove stock articles", () => {
     cy.wait("@getArticles");
   });
 
-  it.only("should add a new article", () => {
+  it("should add a new article", () => {
     cy.intercept({ method: "GET", url: "/api/articles" }, articles).as(
       "getArticles"
     );
