@@ -5,5 +5,9 @@ describe("add and remove stock articles", () => {
 
   it("add and remove stock articles", () => {
     cy.contains("Gestion Stock");
+
+    cy.contains("footer", "Mentions Légales");
+    cy.get("main").contains("h1", "Gérer efficacement votre stock");
+    cy.get("button, .button").contains("voir le stock", { matchCase: false });
   });
 });
