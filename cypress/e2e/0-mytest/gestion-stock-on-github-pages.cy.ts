@@ -1,5 +1,3 @@
-import { articles } from "../../fixtures/articles";
-
 describe("add and remove stock articles", () => {
   beforeEach(() => {
     cy.visit("https://jlg-formation.github.io/cypress-gestion-stock/");
@@ -35,11 +33,17 @@ describe("add and remove stock articles", () => {
       "https://jlg-formation.github.io/cypress-gestion-stock/stock/add"
     );
 
-    cy.get("input").should("have.length", 3);
+    cy.get("input").should("have.length", 6);
     cy.get("input").first().clear().type("Tournevis Cruciforme");
     cy.tab().clear().type("12.34");
-    cy.tab().clear().type("456");
-
+    cy.tab().invoke("val", 55).trigger("change");
+    cy.tab().check();
+    cy.tab().select("Alimentation");
+    cy.tab();
+    cy.get("input[type='radio']").first().should("have.focus");
+    cy.get("input[type='radio']").check("perishable");
+    cy.contains("Date de péremption");
+    cy.tab().type("2025-08-25");
     cy.contains("button", "Ajouter").should("be.disabled");
   });
 });
