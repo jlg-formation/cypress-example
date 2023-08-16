@@ -89,4 +89,32 @@ describe("add and remove stock articles", () => {
     cy.tick(3000);
     cy.wait("@getArticles");
   });
+
+  it("add a new article without expiry date", function () {
+    cy.clock();
+    cy.visit("http://localhost:4200");
+    cy.intercept({ method: "GET", url: "/api/articles" }, articles).as(
+      "getArticles"
+    );
+    cy.contains("a.button", "Voir le stock").click();
+    cy.tick(3000);
+    cy.wait("@getArticles");
+    cy.get("a[title='Ajouter']").click();
+    cy.get("input").first().clear().type("Bidule");
+    cy.get("input").eq(1).clear().type("12");
+    cy.get("input").eq(2).invoke("val", 55).trigger("change");
+    cy.get("select").select("Alimentation");
+    cy.get("input").eq(4).click();
+
+    cy.intercept({ method: "POST", url: "/api/articles" }).as("addNewArticle");
+    cy.intercept({ method: "GET", url: "/api/articles" }, [
+      ...articles,
+      { id: "a3", name: "Bidule", price: 12, qty: 55 },
+    ]).as("getArticles");
+    cy.get(".primary").click();
+    cy.tick(3000);
+    cy.wait("@addNewArticle");
+    cy.tick(3000);
+    cy.wait("@getArticles");
+  });
 });
