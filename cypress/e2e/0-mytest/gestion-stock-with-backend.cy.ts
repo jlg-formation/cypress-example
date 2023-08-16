@@ -75,4 +75,18 @@ describe("add and remove stock articles", () => {
     cy.tick(3000);
     cy.wait("@getArticles");
   });
+
+  it("should refresh", () => {
+    cy.clock();
+    cy.visit("http://localhost:4200/");
+    cy.intercept({ method: "GET", url: "/api/articles" }, articles).as(
+      "getArticles"
+    );
+    cy.contains(".button", "Voir le stock").click();
+    cy.tick(3000);
+    cy.wait("@getArticles");
+    cy.get('[title="Rafraîchir"]').click();
+    cy.tick(3000);
+    cy.wait("@getArticles");
+  });
 });
